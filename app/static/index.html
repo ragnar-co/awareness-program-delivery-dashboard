@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Awareness Program Delivery Dashboard</title>
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <h1>Awareness Program Delivery Dashboard</h1>
+  <div class="controls">
+    <label>Client
+      <select id="clientSelect"><option value="">— All clients —</option></select>
+    </label>
+    <label>As of
+      <input id="asOfInput" type="date" />
+    </label>
+    <button id="refreshBtn">Refresh</button>
+  </div>
+</header>
+
+<main>
+  <section class="cards" id="cards">
+    <div class="card"><div class="card-label">Total deliverables</div><div class="card-value" id="cardTotal">—</div></div>
+    <div class="card"><div class="card-label">Team completed (sent or accepted)</div><div class="card-value" id="cardCompleted">—</div></div>
+    <div class="card card-accepted"><div class="card-label">Client accepted</div><div class="card-value" id="cardAccepted">—</div></div>
+    <div class="card card-overdue"><div class="card-label">Overdue (not yet accepted)</div><div class="card-value" id="cardOverdue">—</div></div>
+  </section>
+
+  <section class="per-client" id="perClientSection">
+    <h2>By client</h2>
+    <table id="perClientTable">
+      <thead><tr><th>Client</th><th>Total</th><th>Team completed</th><th>Accepted</th><th>Overdue</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section class="lists">
+    <div class="list-panel">
+      <h2>Pending client acceptance</h2>
+      <p class="hint">Sent to the client, no verdict yet — never report these as finished.</p>
+      <table id="pendingTable">
+        <thead><tr><th>ID</th><th>Client</th><th>Deliverable</th><th>Owner</th><th>Due</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="list-panel">
+      <h2>Overdue — owner follow-up</h2>
+      <table id="overdueTable">
+        <thead><tr><th>ID</th><th>Client</th><th>Deliverable</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ai-workflow">
+    <h2>AI draft client update (bonus)</h2>
+    <p class="hint">Generates a draft split into pending / accepted / to-follow-up for the selected client. Requires a client to be selected.</p>
+    <button id="generateDraftBtn">Generate draft for selected client</button>
+    <div id="draftStatus"></div>
+    <div id="draftHistory"></div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

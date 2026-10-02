@@ -1,0 +1,17 @@
+services:
+  dashboard:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      DASHBOARD_DB_PATH: /app/data/awareness.db
+      DASHBOARD_CSV_PATH: ${DASHBOARD_CSV_PATH:-}
+      DASHBOARD_AS_OF: ${DASHBOARD_AS_OF:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_BASE_URL: ${ANTHROPIC_BASE_URL:-}
+    volumes:
+      - dashboard-data:/app/data
+
+volumes:
+  dashboard-data:
