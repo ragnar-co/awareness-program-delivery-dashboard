@@ -36,8 +36,13 @@ build agent did not have Coolify API credentials in this environment — the fol
 are for the operator with Coolify access, confirmed with the requester as the intended
 handoff point:
 
+0. **Repo location**: direct push access to `ragnar-co/tee-ai-tech-user-exam` was denied
+   (pull-only token) — the build was pushed instead to
+   `PreeyanutM/awareness-program-delivery-dashboard` (private). Transfer/PR it into
+   `ragnar-co` before pointing Coolify at it, per the exam's own documented flow (push →
+   verify on GitHub → transfer to `ragnar-co`).
 1. In Coolify: **New Resource → Application → Public/Private Git Repository**, point at
-   `ragnar-co/tee-ai-tech-user-exam` (branch `main`), build pack = **Dockerfile**.
+   the repo above (branch `main`), build pack = **Dockerfile**.
 2. Set environment variables per the table above (`ANTHROPIC_API_KEY` as a secret).
 3. Attach a persistent volume at `/app/data` so `awareness.db` survives redeploys.
 4. Set the health check path to `/api/health` (container already defines a Docker
