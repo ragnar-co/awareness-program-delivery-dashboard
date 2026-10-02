@@ -25,17 +25,9 @@
 
 <main>
   <section class="hero" id="hero">
-    <div class="hero-figure">
-      <div class="hero-value" id="heroValue">—%</div>
-      <div class="hero-label">ลูกค้ารับรองแล้ว (Client-accepted rate)</div>
-    </div>
-    <div class="hero-bar-wrap">
-      <div class="hero-bar" role="img" aria-label="Delivery readiness breakdown">
-        <div class="hero-bar-seg" id="heroSegAccepted" style="background:var(--good)"></div>
-        <div class="hero-bar-seg" id="heroSegPending" style="background:var(--warning)"></div>
-        <div class="hero-bar-seg" id="heroSegProgress" style="background:var(--series-1)"></div>
-        <div class="hero-bar-seg" id="heroSegPlanned" style="background:var(--muted)"></div>
-      </div>
+    <div class="donut-wrap" id="heroDonut"></div>
+    <div>
+      <div class="hero-side-label">ภาพรวมความพร้อมส่งมอบงาน (Delivery readiness overview)</div>
       <div class="hero-legend" id="heroLegend"></div>
     </div>
   </section>
@@ -76,7 +68,7 @@
       <h2 id="chartTitle">Status composition by client</h2>
       <div class="legend" id="chartLegend"></div>
     </div>
-    <p class="hint">ความยาวแท่งสีเขียวมากขึ้น = พร้อมส่งมอบงานมากขึ้น เรียงจากลูกค้าที่รับรองแล้วมากที่สุดไปน้อยที่สุด</p>
+    <p class="hint">ตัวเลขกลางวงกลม = % ลูกค้ารับรองแล้ว เรียงจากพร้อมส่งมอบมากที่สุดไปน้อยที่สุด</p>
     <div class="chart-wrap" id="statusChart"></div>
   </section>
 

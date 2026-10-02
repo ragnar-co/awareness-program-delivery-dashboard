@@ -8,10 +8,10 @@ const tooltip = document.getElementById("tooltip");
 
 const STATUS_ORDER = ["accepted", "awaiting_acceptance", "in_progress", "planned"];
 const STATUS_META = {
-  accepted: { label: "Accepted", color: "var(--good)" },
-  awaiting_acceptance: { label: "Awaiting acceptance", color: "var(--warning)" },
-  in_progress: { label: "In progress", color: "var(--series-1)" },
-  planned: { label: "Planned", color: "var(--muted)" },
+  accepted: { label: "Accepted", color: "var(--good-pastel)" },
+  awaiting_acceptance: { label: "Awaiting acceptance", color: "var(--warning-pastel)" },
+  in_progress: { label: "In progress", color: "var(--series-pastel)" },
+  planned: { label: "Planned", color: "var(--muted-pastel)" },
 };
 
 function todayIso() {
@@ -47,15 +47,37 @@ async function loadClients() {
     data.clients.map(c => `<option value="${c}">${c}</option>`).join("");
 }
 
+function donutSvg(statusCounts, { size, strokeWidth, label }) {
+  const total = STATUS_ORDER.reduce((sum, s) => sum + statusCounts[s], 0) || 1;
+  const r = (size - strokeWidth) / 2;
+  const cx = size / 2, cy = size / 2;
+  const circumference = 2 * Math.PI * r;
+  let cumulative = 0;
+  const circles = STATUS_ORDER.map(s => {
+    const count = statusCounts[s];
+    const pct = count / total;
+    const dash = pct * circumference;
+    const offset = -cumulative;
+    cumulative += dash;
+    const pctLabel = (pct * 100).toFixed(1);
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" stroke="${STATUS_META[s].color}"
+              stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${offset}"
+              pointer-events="stroke"
+              data-tooltip="${label ? label + ": " : ""}${STATUS_META[s].label} — ${count} (${pctLabel}%)"></circle>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${size} ${size}">${circles}</svg>`;
+}
+
 function renderHero(overall) {
-  const total = overall.total || 1;
   const counts = overall.status_counts;
-  const pct = (n) => (100 * n / total);
-  document.getElementById("heroValue").textContent = `${Math.round(pct(counts.accepted))}%`;
-  document.getElementById("heroSegAccepted").style.width = pct(counts.accepted) + "%";
-  document.getElementById("heroSegPending").style.width = pct(counts.awaiting_acceptance) + "%";
-  document.getElementById("heroSegProgress").style.width = pct(counts.in_progress) + "%";
-  document.getElementById("heroSegPlanned").style.width = pct(counts.planned) + "%";
+  const total = overall.total || 1;
+  const acceptedPct = Math.round(100 * counts.accepted / total);
+  document.getElementById("heroDonut").innerHTML =
+    donutSvg(counts, { size: 180, strokeWidth: 26 }) +
+    `<div class="donut-center">
+       <div class="donut-center-value">${acceptedPct}%</div>
+       <div class="donut-center-label">ลูกค้ารับรองแล้ว<br>(client accepted)</div>
+     </div>`;
   document.getElementById("heroLegend").innerHTML = legendHtml();
 }
 
@@ -73,18 +95,14 @@ function renderStatusChart(byClient) {
   const wrap = document.getElementById("statusChart");
   wrap.innerHTML = rows.map(c => {
     const total = c.total || 1;
-    const segs = STATUS_ORDER.map(s => {
-      const count = c.status_counts[s];
-      const pct = (100 * count / total).toFixed(1);
-      return `<div class="chart-seg" style="width:${pct}%;background:${STATUS_META[s].color}"
-                data-tooltip="${c.client_name}: ${STATUS_META[s].label} — ${count} (${pct}%)"></div>`;
-    }).join("");
     const acceptedPct = Math.round(100 * c.client_accepted / total);
     return `
-      <div class="chart-row">
-        <div class="chart-row-label" title="${c.client_name}">${c.client_name}</div>
-        <div class="chart-row-bar">${segs}</div>
-        <div class="chart-row-pct">${acceptedPct}%</div>
+      <div class="mini-donut-card">
+        <div class="mini-donut-wrap" title="${c.client_name}">
+          ${donutSvg(c.status_counts, { size: 104, strokeWidth: 15, label: c.client_name })}
+          <div class="mini-donut-center">${acceptedPct}%</div>
+        </div>
+        <div class="mini-donut-name">${c.client_name}</div>
       </div>`;
   }).join("");
 }
@@ -183,7 +201,7 @@ generateDraftBtn.addEventListener("click", async () => {
 
 clientSelect.addEventListener("change", refreshAll);
 refreshBtn.addEventListener("click", refreshAll);
-wireTooltip(document.getElementById("statusChart"));
+wireTooltip(document.body);
 
 (async function init() {
   asOfInput.value = todayIso();
