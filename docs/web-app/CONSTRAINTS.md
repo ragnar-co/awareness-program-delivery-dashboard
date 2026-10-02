@@ -16,7 +16,7 @@
   credentials being available to the build agent — the repo must be deploy-ready
   (`Dockerfile`, env vars documented) for a human to wire up in the Coolify UI.
 - **AI workflow budget** — the bonus draft-update workflow must use the company-provided
-  Claude API endpoint/quota (`ANTHROPIC_API_KEY`, optional `ANTHROPIC_BASE_URL`), not a
+  OpenRouter endpoint/quota (`AI_API_KEY`, optional `AI_BASE_URL`), not a
   hardcoded personal key, and must degrade predictably (HTTP 503 with a clear message)
   when the key is absent rather than silently failing.
 - **Data sensitivity** — the input CSV uses pseudonymous mock identifiers

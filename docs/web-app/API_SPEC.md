@@ -51,11 +51,11 @@ Query params (not body — kept simple for a single-purpose action trigger): `cl
 {
   "client": "Mock-Client-01-Manufacturing", "as_of": "2026-10-02",
   "content": "1. งานที่รอตรวจรับ...\n2. งานที่ลูกค้ารับรองแล้ว...\n3. เรื่องที่ควรติดตาม...",
-  "model": "claude-sonnet-5",
+  "model": "anthropic/claude-sonnet-5",
   "counts": {"pending_acceptance": 43, "accepted": 245, "overdue": 65}
 }
 ```
-→ 503 if `ANTHROPIC_API_KEY` is not configured: `{"detail": "ANTHROPIC_API_KEY is not set — ..."}`
+→ 503 if `AI_API_KEY` is not configured: `{"detail": "AI_API_KEY is not set — ..."}`
 
 ## `GET /api/ai/drafts`
 Query: `client` (optional), returns up to the 20 most recent drafts, newest first —

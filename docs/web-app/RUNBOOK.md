@@ -32,14 +32,14 @@ in `analytics.py`, not the data — file it against `AGENTS.md`'s single-source-
 rule.
 
 ## AI draft workflow returns 503
-Expected when `ANTHROPIC_API_KEY` is unset — not an incident. To fix: set the key (Coolify
-environment variable, or `export ANTHROPIC_API_KEY=...` locally) and restart the container/
+Expected when `AI_API_KEY` is unset — not an incident. To fix: set the key (Coolify
+environment variable, or `export AI_API_KEY=...` locally) and restart the container/
 process; no code change needed.
 
 ## AI draft workflow returns 500 / times out
-Check `ANTHROPIC_BASE_URL` if set (company gateway reachability), check the company's
-Claude API quota/rate-limit status, and check `docker logs` for the raw exception from the
-`anthropic` SDK call in `app/ai_workflow.py::generate_draft`.
+Check `AI_BASE_URL` if set (company gateway reachability), check the company's
+OpenRouter quota/rate-limit status (https://openrouter.ai/api/v1/key), and check `docker logs` for the raw exception from the
+`httpx` call in `app/ai_workflow.py::generate_draft`.
 
 ## Re-ingesting a corrected CSV
 Safe at any time — ingestion upserts by `deliverable_id`, it does not wipe the table first.
@@ -51,6 +51,6 @@ Backup: copy the `data/awareness.db` file (or the Coolify-managed volume) while 
 container is stopped, or use `sqlite3 data/awareness.db ".backup backup.db"` for a
 consistent live snapshot. Restore: stop the container, replace the file, restart.
 
-## Rotating the Anthropic API key
-Update the `ANTHROPIC_API_KEY` environment variable in Coolify and redeploy/restart the
+## Rotating the AI gateway API key
+Update the `AI_API_KEY` environment variable in Coolify and redeploy/restart the
 container — no application code or schema change required.

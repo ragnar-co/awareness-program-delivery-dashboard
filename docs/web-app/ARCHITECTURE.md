@@ -9,7 +9,7 @@
  FastAPI app (app/main.py)  ──────────────┐
         │                                  │
         ▼                                  ▼
- app/ingest.py (CSV validate+upsert)  app/ai_workflow.py (Claude API call)
+ app/ingest.py (CSV validate+upsert)  app/ai_workflow.py (OpenRouter chat-completion call)
         │                                  │
         ▼                                  ▼
  app/db.py ── SQLite file (data/awareness.db) ── ai_drafts / ingestion_runs tables
@@ -28,9 +28,20 @@
 - **Frontend**: no build step — static HTML/CSS/vanilla JS served directly by FastAPI's
   `StaticFiles`, calling the JSON API with `fetch`. Avoids a Node toolchain for a lab-scale
   dashboard with four cards and three tables.
-- **AI integration**: `anthropic` Python SDK, calling the Messages API with
-  `ANTHROPIC_API_KEY` / optional `ANTHROPIC_BASE_URL` from the environment (company-managed
-  endpoint/quota — see `SECURITY.md`).
+- **AI integration**: plain `httpx` POST to the company-provided OpenRouter gateway's
+  OpenAI-compatible `/chat/completions` endpoint (`AI_API_KEY` / `AI_BASE_URL` / `AI_MODEL`
+  from the environment — see `SECURITY.md`). No SDK dependency beyond `httpx`, which the
+  project already needs for its own test client.
+
+### Note: extended thinking must be disabled for this workflow
+The default model (`anthropic/claude-sonnet-5`) runs extended thinking by default on
+OpenRouter. With a bounded `max_tokens`, thinking can consume the entire budget and return
+`finish_reason: "length"` with `content: null` — observed directly while building this
+feature. Fixed by sending `"reasoning": {"max_tokens": 0, "exclude": true}` in the request
+body, and by capping each formatted list to `MAX_LISTED_ITEMS = 20` lines (with an explicit
+"...and N more" plus a stated total) so large clients (one test client had 245 accepted
+rows) don't blow up prompt size/cost. `generate_draft` raises if `content` still comes back
+empty rather than persisting a null draft.
 
 ## Decision: SQLite over DuckDB
 The exam brief allows either. SQLite is chosen because: (a) it is in the Python stdlib —

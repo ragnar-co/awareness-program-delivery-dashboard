@@ -12,7 +12,7 @@ from tests.conftest import SAMPLE_CSV
 def client(tmp_path, monkeypatch):
     monkeypatch.setenv("DASHBOARD_DB_PATH", str(tmp_path / "api_test.db"))
     monkeypatch.setenv("DASHBOARD_AS_OF", "2026-10-02")
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("AI_API_KEY", raising=False)
 
     from app import db, ingest, analytics, ai_workflow, main
     for mod in (db, ingest, analytics, ai_workflow, main):

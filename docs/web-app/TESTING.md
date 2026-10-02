@@ -14,11 +14,13 @@ Three layers, all deterministic (no wall-clock dependence, no network calls):
 3. **API contract** (`tests/test_api.py`) — FastAPI `TestClient` against a fresh temp
    SQLite file per test (via `DASHBOARD_DB_PATH` + reloading `app.*` modules), covering
    health, clients, summary (overall + filtered), pending-acceptance, overdue, and the
-   AI draft endpoint's 503 behavior when `ANTHROPIC_API_KEY` is absent.
+   AI draft endpoint's 503 behavior when `AI_API_KEY` is absent.
 
-No test ever calls the real Anthropic API — the bonus AI workflow is tested only for its
-fail-closed behavior (missing key → 503), since exercising the live endpoint would consume
-the company's quota non-deterministically in CI.
+No automated test calls the real OpenRouter endpoint — the bonus AI workflow is tested only
+for its fail-closed behavior (missing key → 503), since exercising the live endpoint would
+consume the company's quota non-deterministically in CI. The live workflow *was* manually
+verified once during this build with a real company-issued key — see `ARCHITECTURE.md`'s
+note on disabling extended thinking, which that manual run is what surfaced.
 
 ## Running
 ```bash

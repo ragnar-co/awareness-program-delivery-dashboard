@@ -12,8 +12,8 @@
 | `DASHBOARD_DB_PATH` | No (default `/app/data/awareness.db` in the image) | SQLite file location — point at the mounted volume. |
 | `DASHBOARD_CSV_PATH` | No | If set and the DB is empty at boot, auto-ingests this CSV on startup (see `app/main.py` lifespan). Useful for seeding the exam dataset without a manual upload step. |
 | `DASHBOARD_AS_OF` | No | Pins the reference date server-wide for reproducible grading (overridable per-request via `?as_of=`). |
-| `ANTHROPIC_API_KEY` | Only for the bonus AI workflow | Company-provided Claude API key. Never commit; set via Coolify's environment variable UI / secret store. |
-| `ANTHROPIC_BASE_URL` | No | Set only if routing through a company-managed API gateway instead of api.anthropic.com. |
+| `AI_API_KEY` | Only for the bonus AI workflow | Company-provided OpenRouter API key (works with any OpenRouter model id, default `anthropic/claude-sonnet-5`). Never commit; set via Coolify's environment variable UI / secret store. |
+| `AI_BASE_URL` | No | Set only if routing through a company-managed API gateway instead of openrouter.ai. |
 
 See `.env.example` for a template — copy to `.env` for local Docker Compose use; Coolify
 should get these as first-class environment variables in its UI, not via a committed file.
@@ -23,7 +23,7 @@ should get these as first-class environment variables in its UI, not via a commi
 docker build -t awareness-dashboard .
 docker run -p 8000:8000 \
   -e DASHBOARD_CSV_PATH=/app/data/seed.csv \
-  -e ANTHROPIC_API_KEY=sk-ant-... \
+  -e AI_API_KEY=sk-or-v1-... \
   -v "$(pwd)/data:/app/data" \
   -v "$(pwd)/mukie_awareness_deliverables.csv:/app/data/seed.csv:ro" \
   awareness-dashboard
@@ -43,7 +43,7 @@ handoff point:
    verify on GitHub → transfer to `ragnar-co`).
 1. In Coolify: **New Resource → Application → Public/Private Git Repository**, point at
    the repo above (branch `main`), build pack = **Dockerfile**.
-2. Set environment variables per the table above (`ANTHROPIC_API_KEY` as a secret).
+2. Set environment variables per the table above (`AI_API_KEY` as a secret).
 3. Attach a persistent volume at `/app/data` so `awareness.db` survives redeploys.
 4. Set the health check path to `/api/health` (container already defines a Docker
    `HEALTHCHECK`; Coolify can additionally probe this path over HTTP).

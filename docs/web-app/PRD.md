@@ -54,7 +54,7 @@ pending-acceptance / accepted / to-follow-up sections.
   "delivered"; if a section is empty it must say so, not omit or fabricate.
 - **A6.3** Every generated draft is persisted (`ai_drafts` table) and re-displayed on
   revisit, not regenerated/lost on page reload.
-- **A6.4** If `ANTHROPIC_API_KEY` is not configured, the endpoint returns HTTP 503 with a
+- **A6.4** If `AI_API_KEY` is not configured, the endpoint returns HTTP 503 with a
   clear message rather than a generic 500 or a fabricated draft.
 
 ## Non-functional requirements

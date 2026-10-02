@@ -9,8 +9,8 @@ clients" (the data model already carries `client_name` on every row, so row-leve
 is a filter, not a schema change).
 
 ## Secrets
-- `ANTHROPIC_API_KEY` (required for the AI draft workflow) and optional
-  `ANTHROPIC_BASE_URL` are read from the environment only — never hardcoded, never logged.
+- `AI_API_KEY` (required for the AI draft workflow) and optional
+  `AI_BASE_URL` are read from the environment only — never hardcoded, never logged.
   Missing key → `POST /api/ai/draft-update` returns HTTP 503 with a descriptive message
   (see `API_SPEC.md`), not a stack trace and not a fabricated draft.
 - `.env` files, the SQLite database file, and `__pycache__`/`.venv` are excluded via

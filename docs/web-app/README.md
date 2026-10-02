@@ -49,7 +49,7 @@ override per request with `?as_of=YYYY-MM-DD`, or pin it server-wide with the
 Select a client in the UI and click "Generate draft" to produce a Thai-language status
 update split into pending-acceptance / accepted / to-follow-up sections, grounded only in
 that client's current rows (see `API_SPEC.md` → `POST /api/ai/draft-update`). Requires
-`ANTHROPIC_API_KEY` (and optionally `ANTHROPIC_BASE_URL`) to be set — see `SECURITY.md`.
+`AI_API_KEY` (and optionally `AI_BASE_URL`) to be set — see `SECURITY.md`.
 
 ## Project layout
 
