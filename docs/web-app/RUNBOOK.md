@@ -13,12 +13,20 @@ this as its `HEALTHCHECK`; `docker ps` shows `(healthy)`/`(unhealthy)`.
    import error directly.
 
 ## Dashboard loads but shows all zeros
-The SQLite file has no rows yet. Either:
-- `curl -F "file=@yourfile.csv" http://<host>/api/ingest` and check the JSON report for
-  `rejected_rows` / `errors[]`, or
-- confirm `DASHBOARD_CSV_PATH` was set **before** first boot (auto-seed only runs when the
-  table is empty, so setting it after data already exists does nothing — this is
-  intentional, not a bug, to avoid clobbering ingested data on every restart).
+The SQLite file has no rows yet. Fastest fix, works on Docker/Coolify/local alike:
+```bash
+curl -F "file=@yourfile.csv" http://<host>/api/ingest
+```
+Check the JSON report: `inserted_rows` should match the file, `rejected_rows` should be 0.
+
+If you expected `DASHBOARD_CSV_PATH` auto-seed to have handled this and it didn't: that
+variable only does anything if the path it names is **actually reachable inside the
+container** (i.e. bind-mounted there) — setting it to a path on your host machine, or to a
+path Coolify can't see, is a silent no-op (confirmed directly: a `docker compose up -d` run
+came up "healthy" with an empty `awareness.db` because of exactly this). It also only fires
+once, when the table is empty at boot — setting it after data already exists does nothing,
+intentionally, to avoid clobbering ingested data on every restart. See `DEPLOYMENT.md`
+"Loading data" for the supported bind-mount setup if you want auto-seed specifically.
 
 ## Numbers look wrong for a specific client
 Re-derive by hand against `DATA_MODEL.md`'s Enumeration Registry: open
