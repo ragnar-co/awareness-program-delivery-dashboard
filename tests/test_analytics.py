@@ -17,6 +17,9 @@ def test_summarize_overall_counts(db_path):
     assert overall["team_completed"] == 3   # D001 accepted, D002 + D004 awaiting_acceptance
     assert overall["client_accepted"] == 1  # D001
     assert overall["overdue"] == 3           # D002, D004, D005 (not D001: accepted)
+    assert overall["status_counts"] == {
+        "accepted": 1, "awaiting_acceptance": 2, "in_progress": 1, "planned": 1,
+    }
 
 
 def test_summarize_per_client(db_path):
@@ -29,12 +32,18 @@ def test_summarize_per_client(db_path):
     assert acme["team_completed"] == 2
     assert acme["client_accepted"] == 1
     assert acme["overdue"] == 1
+    assert acme["status_counts"] == {
+        "accepted": 1, "awaiting_acceptance": 1, "in_progress": 1, "planned": 0,
+    }
 
     globex = by_client["Globex Inc"]
     assert globex["total"] == 2
     assert globex["team_completed"] == 1
     assert globex["client_accepted"] == 0
     assert globex["overdue"] == 2
+    assert globex["status_counts"] == {
+        "accepted": 0, "awaiting_acceptance": 1, "in_progress": 0, "planned": 1,
+    }
 
 
 def test_summarize_filtered_by_client(db_path):

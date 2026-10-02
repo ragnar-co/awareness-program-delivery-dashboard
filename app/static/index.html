@@ -8,7 +8,10 @@
 </head>
 <body>
 <header class="topbar">
-  <h1>Awareness Program Delivery Dashboard</h1>
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">◆</span>
+    <h1>Awareness Program Delivery Dashboard</h1>
+  </div>
   <div class="controls">
     <label>Client
       <select id="clientSelect"><option value="">— All clients —</option></select>
@@ -21,36 +24,91 @@
 </header>
 
 <main>
+  <section class="hero" id="hero">
+    <div class="hero-figure">
+      <div class="hero-value" id="heroValue">—%</div>
+      <div class="hero-label">ลูกค้ารับรองแล้ว (Client-accepted rate)</div>
+    </div>
+    <div class="hero-bar-wrap">
+      <div class="hero-bar" role="img" aria-label="Delivery readiness breakdown">
+        <div class="hero-bar-seg" id="heroSegAccepted" style="background:var(--good)"></div>
+        <div class="hero-bar-seg" id="heroSegPending" style="background:var(--warning)"></div>
+        <div class="hero-bar-seg" id="heroSegProgress" style="background:var(--series-1)"></div>
+        <div class="hero-bar-seg" id="heroSegPlanned" style="background:var(--muted)"></div>
+      </div>
+      <div class="hero-legend" id="heroLegend"></div>
+    </div>
+  </section>
+
   <section class="cards" id="cards">
-    <div class="card"><div class="card-label">Total deliverables</div><div class="card-value" id="cardTotal">—</div></div>
-    <div class="card"><div class="card-label">Team completed (sent or accepted)</div><div class="card-value" id="cardCompleted">—</div></div>
-    <div class="card card-accepted"><div class="card-label">Client accepted</div><div class="card-value" id="cardAccepted">—</div></div>
-    <div class="card card-overdue"><div class="card-label">Overdue (not yet accepted)</div><div class="card-value" id="cardOverdue">—</div></div>
+    <div class="card">
+      <div class="card-icon" aria-hidden="true">▣</div>
+      <div class="card-body">
+        <div class="card-label">Total deliverables</div>
+        <div class="card-value" id="cardTotal">—</div>
+      </div>
+    </div>
+    <div class="card card-blue">
+      <div class="card-icon" aria-hidden="true">▶</div>
+      <div class="card-body">
+        <div class="card-label">Team completed (sent or accepted)</div>
+        <div class="card-value" id="cardCompleted">—</div>
+      </div>
+    </div>
+    <div class="card card-good">
+      <div class="card-icon" aria-hidden="true">✓</div>
+      <div class="card-body">
+        <div class="card-label">Client accepted</div>
+        <div class="card-value" id="cardAccepted">—</div>
+      </div>
+    </div>
+    <div class="card card-critical">
+      <div class="card-icon" aria-hidden="true">!</div>
+      <div class="card-body">
+        <div class="card-label">Overdue (not yet accepted)</div>
+        <div class="card-value" id="cardOverdue">—</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chart-section" id="chartSection">
+    <div class="section-head">
+      <h2 id="chartTitle">Status composition by client</h2>
+      <div class="legend" id="chartLegend"></div>
+    </div>
+    <p class="hint">ความยาวแท่งสีเขียวมากขึ้น = พร้อมส่งมอบงานมากขึ้น เรียงจากลูกค้าที่รับรองแล้วมากที่สุดไปน้อยที่สุด</p>
+    <div class="chart-wrap" id="statusChart"></div>
   </section>
 
   <section class="per-client" id="perClientSection">
-    <h2>By client</h2>
-    <table id="perClientTable">
-      <thead><tr><th>Client</th><th>Total</th><th>Team completed</th><th>Accepted</th><th>Overdue</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <h2>By client — table view</h2>
+    <div class="table-wrap">
+      <table id="perClientTable">
+        <thead><tr><th>Client</th><th>Total</th><th>Team completed</th><th>Accepted</th><th>Overdue</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </section>
 
   <section class="lists">
     <div class="list-panel">
-      <h2>Pending client acceptance</h2>
+      <h2><span class="dot dot-warning"></span>Pending client acceptance</h2>
       <p class="hint">Sent to the client, no verdict yet — never report these as finished.</p>
-      <table id="pendingTable">
-        <thead><tr><th>ID</th><th>Client</th><th>Deliverable</th><th>Owner</th><th>Due</th></tr></thead>
-        <tbody></tbody>
-      </table>
+      <div class="table-wrap">
+        <table id="pendingTable">
+          <thead><tr><th>ID</th><th>Client</th><th>Deliverable</th><th>Owner</th><th>Due</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
     <div class="list-panel">
-      <h2>Overdue — owner follow-up</h2>
-      <table id="overdueTable">
-        <thead><tr><th>ID</th><th>Client</th><th>Deliverable</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
-        <tbody></tbody>
-      </table>
+      <h2><span class="dot dot-critical"></span>Overdue — owner follow-up</h2>
+      <div class="table-wrap">
+        <table id="overdueTable">
+          <thead><tr><th>ID</th><th>Client</th><th>Deliverable</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -62,6 +120,8 @@
     <div id="draftHistory"></div>
   </section>
 </main>
+
+<div id="tooltip" class="tooltip" role="tooltip" hidden></div>
 
 <script src="/static/app.js"></script>
 </body>

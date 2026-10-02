@@ -11,13 +11,14 @@ services:
       # itself — see the optional bind mount below, or just POST /api/ingest
       # once after `docker compose up -d` (works with zero extra config, see
       # DEPLOYMENT.md "Loading data"). Left unset by default for that reason.
-      DASHBOARD_CSV_PATH: ${DASHBOARD_CSV_PATH:-}
+      DASHBOARD_CSV_PATH: /app/data/seed.csv
       DASHBOARD_AS_OF: ${DASHBOARD_AS_OF:-}
       AI_API_KEY: ${AI_API_KEY:-}
       AI_BASE_URL: ${AI_BASE_URL:-}
       AI_MODEL: ${AI_MODEL:-}
     volumes:
       - dashboard-data:/app/data
+      - /Users/muke/Desktop/lab_exam/mukie_awareness_deliverables.csv:/app/data/seed.csv:ro
       # Optional: uncomment to auto-seed on first boot, and set
       # DASHBOARD_CSV_PATH=/app/data/seed.csv above to match.
       # - ${CSV_HOST_PATH}:/app/data/seed.csv:ro

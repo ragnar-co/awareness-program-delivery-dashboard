@@ -14,11 +14,17 @@ Query: `client` (optional), `as_of` (optional, `YYYY-MM-DD`, see `ARCHITECTURE.m
 ```json
 {
   "as_of": "2026-10-02",
-  "overall": {"client_name": null, "total": 12536, "team_completed": 5908, "client_accepted": 3629, "overdue": 4106},
-  "by_client": [{"client_name": "Mock-Client-01-Manufacturing", "total": 502, "team_completed": 288, "client_accepted": 245, "overdue": 65}, ...]
+  "overall": {"client_name": null, "total": 12536, "team_completed": 5908, "client_accepted": 3629, "overdue": 4106,
+              "status_counts": {"planned": 4529, "in_progress": 2099, "awaiting_acceptance": 2279, "accepted": 3629}},
+  "by_client": [{"client_name": "Mock-Client-01-Manufacturing", "total": 502, "team_completed": 288, "client_accepted": 245, "overdue": 65,
+                 "status_counts": {"planned": 109, "in_progress": 105, "awaiting_acceptance": 43, "accepted": 245}}, ...]
 }
 ```
-If `client` is set, `overall` and `by_client` both scope to that one client.
+`status_counts` breaks the same total down by the four mutually-exclusive `status` values
+(see `DATA_MODEL.md` Enumeration Registry) — it's what the dashboard's status-composition
+chart renders; `team_completed`/`client_accepted`/`overdue` remain the derived metrics for
+the headline cards. If `client` is set, `overall` and `by_client` both scope to that one
+client.
 
 ## `GET /api/deliverables/pending-acceptance`
 Query: `client` (optional), `as_of` (optional). Rows with `status == awaiting_acceptance`,

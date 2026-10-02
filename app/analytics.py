@@ -15,7 +15,7 @@ pending_acceptance = status == awaiting_acceptance (sent to client, no
 """
 from dataclasses import dataclass, field
 
-from .db import session
+from .db import STATUS_VALUES, session
 
 
 @dataclass
@@ -25,6 +25,7 @@ class ClientSummary:
     team_completed: int = 0
     client_accepted: int = 0
     overdue: int = 0
+    status_counts: dict = field(default_factory=lambda: {s: 0 for s in sorted(STATUS_VALUES)})
 
 
 def _base_rows(conn, client: str | None):
@@ -53,6 +54,7 @@ def summarize(as_of: str, client: str | None = None, db_path: str = None) -> dic
         cs = by_client.setdefault(row["client_name"], ClientSummary(client_name=row["client_name"]))
         for target in (cs, overall):
             target.total += 1
+            target.status_counts[row["status"]] += 1
             if row["status"] in ("awaiting_acceptance", "accepted"):
                 target.team_completed += 1
             if row["status"] == "accepted":
